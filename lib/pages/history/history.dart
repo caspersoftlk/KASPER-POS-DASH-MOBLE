@@ -167,7 +167,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                     print("Request res");
                                     http.Response res = await http.get(
                                         Uri.parse(
-                                            'http://${provider.serverip}/FlexPosMobileAdminAPI/sales?did=123&fromDate=${_from.text}&toDate=${_to.text}'),
+                                            'http://${provider.serverip}/sales?did=123&fromDate=${_from.text}&toDate=${_to.text}'),
                                         headers: {
                                           "Accept": "application/json",
                                           "Content-Type":

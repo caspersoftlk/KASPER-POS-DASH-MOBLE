@@ -38,6 +38,14 @@
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
   <script>
+    if (window.location.protocol.indexOf('https') == 0){
+  var el = document.createElement('meta')
+  el.setAttribute('http-equiv', 'Content-Security-Policy')
+  el.setAttribute('content', 'upgrade-insecure-requests')
+  document.head.append(el)
+}
+
+
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
     function loadMainDartJs() {

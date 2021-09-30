@@ -53,11 +53,13 @@ class InfoCardSmall extends StatelessWidget {
                   ),
                 ],
               ),
-              CustomText(
-                text: value,
-                size: 16,
-                weight: FontWeight.bold,
-                color: topColor,
+              Flexible(
+                child: CustomText(
+                  text: value,
+                  size: 16,
+                  weight: FontWeight.bold,
+                  color: topColor,
+                ),
               ),
             ],
           ),

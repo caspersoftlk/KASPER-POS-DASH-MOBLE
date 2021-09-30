@@ -4,7 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:http/http.dart' as http;
+import 'package:kasper_dash/helpers/custom_text.dart';
 import 'package:kasper_dash/pages/overview/widgets/info_card_small.dart';
 import 'package:provider/provider.dart';
 
@@ -32,9 +35,32 @@ class _HistoryPageState extends State<SearchStock> {
   TextEditingController _to = TextEditingController();
 
   String status = "uninitialized";
+  String barcodeScanRes = "";
 
   late ReorderItem? record = null;
 
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    searchController.text = barcodeScanRes;
+    _openDropDownProgKey.currentState?.openDropDownSearch();
+  }
+
+  final _openDropDownProgKey = GlobalKey<DropdownSearchState<ReorderItem>>();
+  final TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     ServerProvider provider = Provider.of(context);
@@ -66,15 +92,17 @@ class _HistoryPageState extends State<SearchStock> {
                         height: 10,
                       ),
                       DropdownSearch<ReorderItem>(
+                        key: _openDropDownProgKey,
                         isFilteredOnline: true,
                         showClearButton: true,
                         showSearchBox: true,
+                        autoFocusSearchBox: true,
+                        searchBoxController: searchController,
                         label: "Search Item",
                         onFind: (String filter) async {
-                          print("onFind");
                           http.Response res = await http.get(
                               Uri.parse(
-                                  'http://${provider.serverip}/FlexPosMobileAdminAPI/getitemstockusingbarcode?did=123&bc=${filter}'),
+                                  'http://${provider.serverip}/getitemstockusingbarcode?did=123&bc=$filter'),
                               headers: {
                                 "Accept": "application/json",
                                 "Content-Type":
@@ -91,6 +119,20 @@ class _HistoryPageState extends State<SearchStock> {
                             record = data;
                           });
                         },
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(primary: pink),
+                            label: CustomText(
+                              text: "Scan Barcode",
+                              color: Colors.white,
+                            ),
+                            onPressed: () => scanBarcodeNormal(),
+                            icon: Icon(Icons.camera)),
                       ),
                       SizedBox(
                         height: 10,
@@ -114,16 +156,6 @@ class _HistoryPageState extends State<SearchStock> {
                           isActive: false,
                           onTap: () {},
                           icon: Icons.tag),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      InfoCardSmall(
-                          title: "Description",
-                          value: record!.ITMDESCRIPTION,
-                          topColor: green,
-                          isActive: false,
-                          onTap: () {},
-                          icon: Icons.description),
                       SizedBox(
                         height: 10,
                       ),

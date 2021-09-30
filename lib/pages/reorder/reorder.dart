@@ -16,7 +16,7 @@ class _ReOrderState extends State<ReOrder> {
   Future<http.Response> getStream() async {
     return await http.get(
         Uri.parse(
-            'http://$serveripx/FlexPosMobileAdminAPI/reorderitems?did=123'),
+            'http://$serveripx/reorderitems?did=123'),
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/x-www-form-urlencoded",

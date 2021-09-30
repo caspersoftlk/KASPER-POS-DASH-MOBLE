@@ -20,13 +20,13 @@ class ServerProvider with ChangeNotifier {
   String? get deviceid => _deviceid;
   Status get status => _statusx;
 
-  final String collection = "kasper-dash-init";
+  final String collection = "kasper-dash-cic";
 
   ServerProvider.init() {
-    InitializeServer();
+    initializeServer();
   }
 
-  InitializeServer() async {
+  initializeServer() async {
     print("init server");
     _statusx = Status.Authenticating;
     _deviceid = await PlatformDeviceId.getDeviceId;

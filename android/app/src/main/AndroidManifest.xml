@@ -2,7 +2,7 @@
     package="com.example.kasper_dash">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="kasper_dash"
+        android:label="K-Admin"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

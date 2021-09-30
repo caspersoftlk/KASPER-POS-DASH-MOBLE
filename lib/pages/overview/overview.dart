@@ -28,7 +28,7 @@ class OverViewPage extends StatelessWidget {
       await Future.delayed(Duration(seconds: s));
       s = 15;
       http.Response res = await http.get(
-          Uri.parse('http://${serverip}/FlexPosMobileAdminAPI/livesales?did=123'),
+          Uri.parse('http://$serverip/livesales?did=123'),
           headers: {
             "Accept": "application/json",
             "Content-Type": "application/x-www-form-urlencoded",
